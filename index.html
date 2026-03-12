@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — إطلاق المنتج</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #C9A84C; --gold-light: #F0D080; --gold-dim: rgba(201,168,76,0.15);
+    --bg: #080808; --surface: #111111; --text: #F5F0E8; --muted: #888880;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Tajawal', sans-serif; overflow-x: hidden; cursor: none; }
+  .cursor { position: fixed; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s, width 0.3s, height 0.3s; }
+  .cursor-ring { position: fixed; width: 38px; height: 38px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: transform 0.18s ease-out, width 0.3s, height 0.3s; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1000; opacity: 0.5; }
+  nav { position: fixed; top: 0; width: 100%; padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 100; background: linear-gradient(to bottom, rgba(8,8,8,0.9), transparent); backdrop-filter: blur(2px); }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.3em; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.15em; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold-light); }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%); }
+  .ring { position: absolute; border-radius: 50%; border: 1px solid rgba(201,168,76,0.08); animation: expand 8s linear infinite; pointer-events: none; }
+  .ring:nth-child(1) { width: 400px; height: 400px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 0s; }
+  .ring:nth-child(2) { width: 650px; height: 650px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 2s; }
+  .ring:nth-child(3) { width: 900px; height: 900px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 4s; }
+  @keyframes expand { 0% { opacity: 0; transform: translate(-50%,-50%) scale(0.8); } 20% { opacity: 1; } 80% { opacity: 0.4; } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.15); } }
+  .hero-label { font-size: 0.75rem; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 30px; opacity: 0; animation: fadeUp 1s 0.3s forwards; position: relative; z-index: 2; }
+  .hero-label::before, .hero-label::after { content: '—'; margin: 0 12px; opacity: 0.5; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 9vw, 7.5rem); font-weight: 900; line-height: 1.05; margin-bottom: 30px; position: relative; z-index: 2; opacity: 0; animation: fadeUp 1s 0.5s forwards; }
+  h1 .accent { background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 60%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+  .hero-sub { font-size: 1.1rem; font-weight: 300; color: var(--muted); max-width: 540px; line-height: 1.9; margin-bottom: 56px; opacity: 0; animation: fadeUp 1s 0.7s forwards; position: relative; z-index: 2; }
+  .cta-group { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fadeUp 1s 0.9s forwards; position: relative; z-index: 2; }
+  .btn-primary { padding: 18px 48px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: #080808; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.15em; border: none; border-radius: 2px; cursor: none; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; font-family: 'Tajawal', sans-serif; text-transform: uppercase; }
+  .btn-primary::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.15); transform: translateX(-101%); transition: transform 0.4s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.35); }
+  .btn-primary:hover::after { transform: translateX(101%); }
+  .btn-ghost { padding: 17px 48px; background: transparent; color: var(--text); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.15em; border: 1px solid rgba(201,168,76,0.3); border-radius: 2px; cursor: none; transition: border-color 0.3s, color 0.3s; font-family: 'Tajawal', sans-serif; text-transform: uppercase; }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold-light); }
+  .scroll-hint { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; animation: fadeIn 1s 1.5s forwards; }
+  .scroll-hint span { font-size: 0.7rem; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollAnim 2s ease-in-out infinite; }
+  @keyframes scrollAnim { 0%, 100% { transform: scaleY(1); transform-origin: top; } 50% { transform: scaleY(0.4); transform-origin: bottom; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .stats { padding: 80px 60px; border-top: 1px solid rgba(201,168,76,0.1); border-bottom: 1px solid rgba(201,168,76,0.1); display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; }
+  .stat-item { padding: 40px 20px; border-left: 1px solid rgba(201,168,76,0.1); opacity: 0; transform: translateY(20px); transition: opacity 0.7s, transform 0.7s; }
+  .stat-item:first-child { border-left: none; }
+  .stat-item.visible { opacity: 1; transform: none; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; line-height: 1; }
+  .stat-label { color: var(--muted); font-size: 0.85rem; letter-spacing: 0.2em; margin-top: 10px; text-transform: uppercase; }
+  .features { padding: 120px 60px; max-width: 1200px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 80px; }
+  .section-tag { font-size: 0.75rem; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.2; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.1); }
+  .feature-card { background: var(--bg); padding: 50px 40px; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s, background 0.3s; }
+  .feature-card.visible { opacity: 1; transform: none; }
+  .feature-card:hover { background: rgba(201,168,76,0.04); }
+  .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform 0.4s; }
+  .feature-card:hover::before { transform: scaleX(1); }
+  .feature-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: rgba(201,168,76,0.12); position: absolute; top: 20px; left: 30px; line-height: 1; }
+  .feature-icon { font-size: 2rem; margin-bottom: 24px; display: block; }
+  .feature-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+  .feature-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+  .cta-section { text-align: center; padding: 140px 40px; position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%); }
+  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; margin-bottom: 24px; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.05rem; margin-bottom: 50px; max-width: 480px; margin-inline: auto; line-height: 1.9; position: relative; margin-bottom: 50px; }
+  footer { border-top: 1px solid rgba(201,168,76,0.1); padding: 50px 60px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.8rem; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 0.3em; font-size: 1.2rem; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; } .nav-links { display: none; }
+    .stats { grid-template-columns: 1fr; }
+    .stat-item { border-left: none; border-top: 1px solid rgba(201,168,76,0.1); } .stat-item:first-child { border-top: none; }
+    .features { padding: 80px 24px; } .features-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav>
+  <div class="logo">NEXUS</div>
+  <ul class="nav-links">
+    <li><a href="#">المنتج</a></li>
+    <li><a href="#">المميزات</a></li>
+    <li><a href="#">الأسعار</a></li>
+    <li><a href="#">تواصل معنا</a></li>
+  </ul>
+  <button class="btn-primary" style="padding:12px 28px;font-size:0.8rem;">ابدأ الآن</button>
+</nav>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  <p class="hero-label">إطلاق المنتج الجديد</p>
+  <h1>المستقبل<br><span class="accent">يبدأ من هنا</span></h1>
+  <p class="hero-sub">منصة متكاملة تُعيد تعريف طريقة عملك وتُحوّل أفكارك إلى واقع ملموس بأدوات استثنائية وتجربة لا مثيل لها.</p>
+  <div class="cta-group">
+    <button class="btn-primary">ابدأ تجربتك المجانية</button>
+    <button class="btn-ghost">شاهد العرض التوضيحي</button>
+  </div>
+  <div class="scroll-hint"><span>اكتشف</span><div class="scroll-line"></div></div>
+</section>
+<section class="stats">
+  <div class="stat-item"><span class="stat-num">+500</span><p class="stat-label">عميل راضٍ</p></div>
+  <div class="stat-item"><span class="stat-num">99.9%</span><p class="stat-label">وقت التشغيل</p></div>
+  <div class="stat-item"><span class="stat-num">3×</span><p class="stat-label">زيادة الإنتاجية</p></div>
+</section>
+<section class="features">
+  <div class="section-header">
+    <p class="section-tag">لماذا نحن</p>
+    <h2 class="section-title">أدوات صُنعت<br>للتميّز</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card"><span class="feature-num">01</span><span class="feature-icon">⚡</span><h3 class="feature-title">أداء خاطف</h3><p class="feature-desc">بنية تحتية مُحسّنة تضمن سرعة استجابة فائقة في كل الأوقات دون أي تأخير.</p></div>
+    <div class="feature-card"><span class="feature-num">02</span><span class="feature-icon">🔒</span><h3 class="feature-title">أمان لا يُخترق</h3><p class="feature-desc">حماية متعددة الطبقات بأحدث معايير التشفير لضمان أمان بياناتك الكاملة.</p></div>
+    <div class="feature-card"><span class="feature-num">03</span><span class="feature-icon">✦</span><h3 class="feature-title">تصميم استثنائي</h3><p class="feature-desc">واجهة مستخدم أنيقة وبديهية تجعل كل تفاعل تجربة ممتعة لا تُنسى.</p></div>
+    <div class="feature-card"><span class="feature-num">04</span><span class="feature-icon">🌐</span><h3 class="feature-title">وصول عالمي</h3><p class="feature-desc">خوادم موزّعة حول العالم لضمان تجربة سلسة لجميع مستخدميك أينما كانوا.</p></div>
+    <div class="feature-card"><span class="feature-num">05</span><span class="feature-icon">📊</span><h3 class="feature-title">تحليلات ذكية</h3><p class="feature-desc">رؤى عميقة ومعلومات قيّمة تُساعدك على اتخاذ قرارات مبنية على بيانات دقيقة.</p></div>
+    <div class="feature-card"><span class="feature-num">06</span><span class="feature-icon">🤝</span><h3 class="feature-title">دعم على مدار الساعة</h3><p class="feature-desc">فريق متخصص جاهز لمساعدتك في كل وقت، لضمان استمرارية عملك دون انقطاع.</p></div>
+  </div>
+</section>
+<section class="cta-section">
+  <h2>جاهز لتحويل<br><span style="background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">رؤيتك إلى واقع؟</span></h2>
+  <p>انضم إلى مئات الشركات التي اختارت NEXUS لقيادة مسيرتها نحو التميّز والنجاح.</p>
+  <button class="btn-primary" style="font-size:1rem;padding:20px 60px;">ابدأ مجاناً اليوم</button>
+</section>
+<footer>
+  <div class="footer-logo">NEXUS</div>
+  <span>© 2025 جميع الحقوق محفوظة</span>
+  <span style="letter-spacing:0.1em;">صُنع بـ ♦ إتقان</span>
+</footer>
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+  function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * .12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('button, a').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width = '6px'; cursor.style.height = '6px'; ring.style.width = '55px'; ring.style.height = '55px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; ring.style.width = '38px'; ring.style.height = '38px'; });
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), e.target.dataset.delay || 0); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.stat-item').forEach((el, i) => { el.dataset.delay = i * 150; observer.observe(el); });
+  document.querySelectorAll('.feature-card').forEach((el, i) => { el.dataset.delay = i * 100; observer.observe(el); });
+</script>
+</body>
+</html>
